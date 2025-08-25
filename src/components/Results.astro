@@ -1,0 +1,93 @@
+---
+
+---
+
+<div id="results" class="hidden bg-white rounded-xl shadow-lg p-6">
+  <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+    📊 Resultados
+  </h3>
+
+  <!-- Main Result - Your Daily Average -->
+  <div class="mb-6">
+    <div
+      class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-6 rounded-xl text-center shadow-lg"
+    >
+      <div class="text-4xl font-bold mb-2" id="averagePerDay">0</div>
+      <div class="text-lg opacity-90 mb-1">
+        Promedio por Ticket (Días Equivalentes)
+      </div>
+      <div class="text-sm opacity-75">
+        Tu métrica principal para reportes mensuales
+      </div>
+    </div>
+  </div>
+
+  <!-- Secondary Results -->
+  <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-4">
+    <div
+      class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 rounded-lg text-center"
+    >
+      <div class="text-2xl font-bold" id="totalHours">0</div>
+      <div class="text-sm opacity-90">Tiempo Total</div>
+    </div>
+    <div
+      class="bg-gradient-to-r from-green-500 to-green-600 text-white p-4 rounded-lg text-center"
+    >
+      <div class="text-2xl font-bold" id="totalMinutes">0</div>
+      <div class="text-sm opacity-90">Minutos</div>
+    </div>
+    <div
+      class="bg-gradient-to-r from-orange-500 to-orange-600 text-white p-4 rounded-lg text-center"
+    >
+      <div class="text-2xl font-bold" id="totalSeconds">0</div>
+      <div class="text-sm opacity-90">Segundos</div>
+    </div>
+    <div
+      class="bg-gradient-to-r from-purple-500 to-purple-600 text-white p-4 rounded-lg text-center"
+    >
+      <div class="text-2xl font-bold" id="hoursCount">0</div>
+      <div class="text-sm opacity-90">Tickets</div>
+    </div>
+    <div
+      class="bg-gradient-to-r from-pink-500 to-pink-600 text-white p-4 rounded-lg text-center"
+    >
+      <div class="text-2xl font-bold" id="averageTime">0</div>
+      <div class="text-sm opacity-90">Promedio Simple</div>
+    </div>
+  </div>
+
+  <!-- Average Calculation Explanation -->
+  <!-- <div class="mt-6 bg-green-50 border border-green-200 rounded-lg p-4">
+    <h4 class="font-medium text-green-800 mb-2">
+      📊 Tu Método de Cálculo (Correcto):
+    </h4>
+    <div class="text-sm text-green-700 space-y-2">
+      <p>
+        <strong>Fórmula Principal:</strong> Total de Horas ÷ 24 ÷ Número de Tickets
+        = Días Equivalentes por Ticket
+      </p>
+      <p>
+        <strong>¿Por qué dividir entre 24?</strong> Normalizas las horas laborales
+        reales a días estándar de 24 horas para obtener una métrica comparable.
+      </p>
+      <p>
+        <strong>Interpretación:</strong> El resultado te dice cuántos "días equivalentes"
+        tardas en promedio por ticket.
+      </p>
+      <p class="mt-2 text-xs bg-green-100 p-2 rounded">
+        <strong>Ejemplo:</strong> Si obtienes 0.75, significa que cada ticket te
+        toma aproximadamente 3/4 de un día laboral en resolverse.
+      </p>
+    </div>
+  </div> -->
+
+  <!-- Detailed List -->
+  <!-- <div class="mt-6">
+    <h4 class="font-medium text-gray-700 mb-3">Detalle de Horas:</h4>
+    <div
+      id="hoursList"
+      class="bg-gray-50 rounded-lg p-4 max-h-40 overflow-y-auto"
+    >
+    </div>
+  </div> -->
+</div>
