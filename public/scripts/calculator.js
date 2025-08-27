@@ -33,6 +33,19 @@ function formatTime(hours, minutes, seconds = 0) {
 	return `${hours}:${minutes.toString().padStart(2, '0')}`;
 }
 
+function validateTimeFormat(line) {
+	// Expresión regular para formatos válidos: HH:MM:SS, HH:MM, N, N.N
+	const timeFormatRegex = /^(?:\d{1,}(?::\d{2}(?::\d{2})?)?|\d*\.\d+)$/;
+	return timeFormatRegex.test(line.trim());
+}
+
+function validateFullInput(input) {
+	const lines = input.split(/[\n,]/).filter(line => line.trim());
+	if (lines.length === 0) return true; // Input vacío es válido (se maneja en calculateFromText)
+	return lines.every(line => validateTimeFormat(line));
+}
+
+
 function processHours(input) {
 	const lines = input.split(/[\n,]/).filter(line => line.trim());
 	if (lines.length === 0) {
@@ -45,6 +58,10 @@ function processHours(input) {
 	for (let line of lines) {
 		line = line.trim();
 		if (!line) continue;
+
+		if (!validateTimeFormat(line)) {
+			throw new Error(`Formato inválido en la línea: "${line}". Usa HH:MM:SS, HH:MM, o horas (ej. 8, 7.5)`);
+		}
 
 		try {
 			const seconds = parseTimeToSeconds(line);
@@ -97,6 +114,7 @@ function displayResults(totalSeconds, processedHours) {
 	resultsDiv.classList.add('fade-in');
 
 	hideError();
+	hideInputError();
 }
 
 function showError(message) {
@@ -107,8 +125,47 @@ function showError(message) {
 }
 
 function hideError() {
-	document.getElementById('errorMessage').classList.add('hidden');
+	const errorDiv = document.getElementById('errorMessage');
+	if (errorDiv) {
+		errorDiv.classList.add('hidden');
+	}
 }
+
+function showInputError(message) {
+	const inputErrorDiv = document.getElementById('inputError');
+	const inputErrorText = document.getElementById('inputErrorText');
+	if (inputErrorDiv && inputErrorText) {
+		inputErrorText.textContent = message;
+		inputErrorDiv.classList.remove('hidden');
+	}
+}
+
+function hideInputError() {
+	const inputErrorDiv = document.getElementById('inputError');
+	if (inputErrorDiv) {
+		inputErrorDiv.classList.add('hidden');
+	}
+}
+
+function restrictInputFormat(textarea) {
+	const validPattern = /^[0-9:.\n,]*$/; // Solo números, :, ., comas y saltos de línea
+	const value = textarea.value;
+
+	if (!validPattern.test(value)) {
+		// Revertir al último valor válido
+		textarea.value = textarea.dataset.lastValid || '';
+		showInputError('Solo números, : , . , comas y saltos de línea son permitidos');
+	} else if (!validateFullInput(value)) {
+		// Si los caracteres son válidos pero el formato no lo es
+		textarea.value = textarea.dataset.lastValid || '';
+		showInputError('Formato inválido. Usa HH:MM:SS, HH:MM, o horas (ej. 8, 7.5)');
+	}
+	else {
+		textarea.dataset.lastValid = value; // Guardar el valor válido
+		hideInputError();
+	}
+}
+
 
 function calculateFromText() {
 	const input = document.getElementById('hoursInput').value;
@@ -147,9 +204,40 @@ function handleFileUpload(event) {
 
 	reader.readAsText(file);
 }
+function clearInputs() {
+	const hoursInput = document.getElementById('hoursInput');
+	const fileInput = document.getElementById('fileInput');
+	const resultsDiv = document.getElementById('results');
+	const errorDiv = document.getElementById('errorMessage');
 
-document.getElementById('hoursInput').addEventListener('keypress', function (e) {
-	if (e.key === 'Enter' && e.ctrlKey) {
-		calculateFromText();
+	if (hoursInput) {
+		hoursInput.value = ''; // Limpia el textarea
 	}
-});
+	if (fileInput) {
+		fileInput.value = ''; // Limpia el input de archivo
+	}
+	if (resultsDiv) {
+		resultsDiv.classList.add('hidden'); // Oculta la tarjeta de resultados
+		resultsDiv.classList.remove('fade-in');
+	}
+	if (errorDiv) {
+		errorDiv.classList.add('hidden'); // Oculta el mensaje de error
+		errorDiv.classList.remove('fade-in');
+	}
+}
+
+const hoursInput = document.getElementById('hoursInput');
+if (hoursInput) {
+	hoursInput.addEventListener('keypress', function (e) {
+		if (e.key === 'Enter' && e.ctrlKey) {
+			calculateFromText();
+		}
+	});
+} else {
+	console.error('Elemento hoursInput no encontrado');
+}
+
+// Exponer funciones al ámbito global para los eventos onclick y onchange
+window.calculateFromText = calculateFromText;
+window.handleFileUpload = handleFileUpload;
+window.clearInputs = clearInputs;
