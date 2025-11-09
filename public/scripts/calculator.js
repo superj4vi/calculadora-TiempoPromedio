@@ -95,8 +95,8 @@ function displayResults(totalSeconds, processedHours) {
 	const averagePerDayDecimal = totalHoursDecimal / 24 / processedHours.length;
 
 	document.getElementById('totalHours').textContent = formatTime(hours, minutes, seconds);
-	document.getElementById('totalMinutes').textContent = totalMinutes;
-	document.getElementById('totalSeconds').textContent = totalSeconds;
+	// document.getElementById('totalMinutes').textContent = totalMinutes;
+	// document.getElementById('totalSeconds').textContent = totalSeconds;
 	document.getElementById('hoursCount').textContent = processedHours.length;
 	document.getElementById('averageTime').textContent = formatTime(avgHours, avgMinutes, avgSeconds);
 	document.getElementById('averagePerDay').textContent = averagePerDayDecimal.toFixed(4) + ' días';
