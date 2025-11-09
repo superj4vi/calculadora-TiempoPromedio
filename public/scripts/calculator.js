@@ -1,3 +1,10 @@
+// Convierte una cadena de tiempo a segundos totales
+// Soporta formatos HH:MM:SS, HH:MM, N (horas), N.N (horas decimales)
+// Ejemplos:
+// "2:30:15" -> 9015 segundos
+// "1:45" -> 6300 segundos
+// "8" -> 28800 segundos
+// "7.5" -> 27000 segundos
 function parseTimeToSeconds(timeStr) {
 	timeStr = timeStr.trim();
 	if (timeStr.includes(':')) {
@@ -19,6 +26,7 @@ function parseTimeToSeconds(timeStr) {
 	return 0;
 }
 
+// Convierte segundos totales a un objeto con horas, minutos y segundos
 function secondsToHoursMinutesSeconds(totalSeconds) {
 	const hours = Math.floor(totalSeconds / 3600);
 	const minutes = Math.floor((totalSeconds % 3600) / 60);
@@ -26,43 +34,46 @@ function secondsToHoursMinutesSeconds(totalSeconds) {
 	return { hours, minutes, seconds };
 }
 
+// Formatea horas, minutos y segundos a una cadena HH:MM o HH:MM:SS
 function formatTime(hours, minutes, seconds = 0) {
 	if (seconds > 0) {
-		return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+		return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`; // HH:MM:SS formato
 	}
-	return `${hours}:${minutes.toString().padStart(2, '0')}`;
+	return `${hours}:${minutes.toString().padStart(2, '0')}`; // HH:MM formato
 }
 
+// Valida si una línea tiene un formato de tiempo válido
 function validateTimeFormat(line) {
 	// Expresión regular para formatos válidos: HH:MM:SS, HH:MM, N, N.N
 	const timeFormatRegex = /^(?:\d{1,}(?::\d{2}(?::\d{2})?)?|\d*\.\d+)$/;
 	return timeFormatRegex.test(line.trim());
 }
 
+// Valida todo el input para asegurarse de que cada línea tenga un formato válido
 function validateFullInput(input) {
 	const lines = input.split(/[\n,]/).filter(line => line.trim());
 	if (lines.length === 0) return true; // Input vacío es válido (se maneja en calculateFromText)
 	return lines.every(line => validateTimeFormat(line));
 }
 
-
+// Procesa el input y calcula el total de segundos y las horas procesadas
 function processHours(input) {
 	const lines = input.split(/[\n,]/).filter(line => line.trim());
 	if (lines.length === 0) {
 		throw new Error('No se encontraron horas válidas en el texto');
 	}
-
+// Procesar cada línea y acumular segundos
 	let totalSeconds = 0;
 	const processedHours = [];
-
+// Recorrer cada línea del input
 	for (let line of lines) {
 		line = line.trim();
 		if (!line) continue;
-
+// Validar formato de la línea
 		if (!validateTimeFormat(line)) {
 			throw new Error(`Formato inválido en la línea: "${line}". Usa HH:MM:SS, HH:MM, o horas (ej. 8, 7.5)`);
 		}
-
+// Convertir a segundos y acumular
 		try {
 			const seconds = parseTimeToSeconds(line);
 			if (seconds > 0) {
@@ -78,14 +89,14 @@ function processHours(input) {
 			console.warn(`No se pudo procesar: ${line}`);
 		}
 	}
-
+// Asegurarse de que se procesaron horas válidas
 	if (processedHours.length === 0) {
 		throw new Error('No se encontraron horas válidas para procesar');
 	}
-
+// Devolver el total de segundos y las horas procesadas
 	return { totalSeconds, processedHours };
 }
-
+// Muestra los resultados en la interfaz de usuario
 function displayResults(totalSeconds, processedHours) {
 	const { hours, minutes, seconds } = secondsToHoursMinutesSeconds(totalSeconds);
 	const totalMinutes = Math.floor(totalSeconds / 60);
